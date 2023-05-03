@@ -1,25 +1,29 @@
 import PropTypes from 'prop-types';
 import { List, DeleteBtn } from './ContactElement.styled';
-import { useDispatch } from 'react-redux';
-import { deleteContact } from 'redux/slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from '../../redux/operations';
+import { selectContacts } from 'redux/selectors';
 
-export const ContactElement = ({ name, number, onClickDeleteBtn, id }) => {
+export const ContactElement = ({ name, phone, id }) => {
   const dispatch = useDispatch();
-
+  const { isLoading } = useSelector(selectContacts);
   const handleDelete = () => dispatch(deleteContact(id));
+
   return (
     <List>
       <p>
-        {name}: {number}
+        {name}: {phone}
       </p>
-      <DeleteBtn onClick={handleDelete}>Delete</DeleteBtn>
+      <DeleteBtn onClick={handleDelete} disabled={isLoading}>
+        Delete
+      </DeleteBtn>
     </List>
   );
 };
 
 ContactElement.propTypes = {
   name: PropTypes.string,
-  number: PropTypes.string,
+  phone: PropTypes.string,
   id: PropTypes.string,
   onClickDeleteBtn: PropTypes.func,
 };

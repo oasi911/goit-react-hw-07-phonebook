@@ -5,30 +5,23 @@ import {
   StyledInput,
   Paragraph,
 } from './ContactForm.styler';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts } from 'redux/selectors';
-import { addContact } from 'redux/slice';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../../redux/operations';
 
 export const ContactForm = () => {
-  const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
-
   const handleSubmit = e => {
     e.preventDefault();
+    const form = e.target;
 
-    const { name, number } = e.target.elements;
-    const contactName = name.value.trim();
+    dispatch(
+      addContact({
+        name: form.elements.name.value,
+        phone: form.elements.number.value,
+      })
+    );
 
-    if (
-      contacts.some(
-        contact => contact.name.toLowerCase() === contactName.toLowerCase()
-      )
-    ) {
-      return alert(`${contactName} is already in contacts.`);
-    }
-
-    dispatch(addContact({ name: contactName, number: number.value.trim() }));
-    e.target.reset();
+    form.reset();
   };
 
   return (
